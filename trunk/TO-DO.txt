@@ -1,11 +1,11 @@
-Sprite
-Personagem Principal
+Sprite *Matheus*
+Personagem Principal *Matheus*
 Física & Colisão com os blocos *Leonardo*
 Mapa procedural (é criado conforme a movimentação do jogador) * Chacal *
-Input (movimentação por touch)
-Movimentação por Acelerometro
+Input (movimentação por touch) *Leonardo*
+Movimentação por Acelerometro *Leonardo*
 Pontuação por altura
-Inimigos
+Inimigos *Matheus*	
 
 if(Chacal == foda){
   Plataformas: 
@@ -13,4 +13,6 @@ if(Chacal == foda){
    -Movimenta: se movimenta (uma direção definida) 
    -Quebradiço: quebra quando o personagem colide 
    -Uma vez: quebra depois de um pulo
+}else if(realidade == true){
+   -Nothing done
 }
