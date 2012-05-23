@@ -1,13 +1,16 @@
 Sprite
 Personagem Principal
 Física & Colisão com os blocos *Leonardo*
-Mapa procedural (é criado conforme a movimentação do jogador)
+Mapa procedural (é criado conforme a movimentação do jogador) * Chacal *
 Input (movimentação por touch)
 Movimentação por Acelerometro
 Pontuação por altura
 Inimigos
-Plataformas:
--Normal: fica parada
--Movimenta: se movimenta (uma direção definida)
--Quebradiço: quebra quando o personagem colide
--Uma vez: quebra depois de um pulo
+
+if(Chacal == foda){
+  Plataformas: 
+   -Normal: fica parada  
+   -Movimenta: se movimenta (uma direção definida) 
+   -Quebradiço: quebra quando o personagem colide 
+   -Uma vez: quebra depois de um pulo
+}
