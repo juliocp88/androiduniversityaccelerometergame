@@ -54,14 +54,6 @@ public abstract class DrawablePanel
 	    }			
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.hardware.SensorEventListener#onSensorChanged(android.hardware
-	 * .SensorEvent)
-	 */
-	@Override
 	public void onSensorChanged(SensorEvent event) {
 		
 	}
