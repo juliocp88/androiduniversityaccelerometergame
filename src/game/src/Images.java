@@ -7,7 +7,7 @@ import android.graphics.Rect;
 
 public class Images {
 	public static Bitmap exampleImage;
-	public static Bitmap imagePlatOne,imagePlatTwo,imagePlatThree,imagePlatThreeBroken,imagePlatFour;
+	public static Bitmap imagePlatOne,imagePlatTwo,imagePlatThree,imagePlatThreeBroken,imagePlatFour, imageCharacter;
 	
 	public static void LoadAll(AssetManager manager) {
 		exampleImage = loadImage("", manager);
@@ -16,6 +16,7 @@ public class Images {
 		imagePlatThree =  loadImage("imgPlatFormThree.png", manager);
 		imagePlatThreeBroken =  loadImage("imgPlatFormThreeBroken.png", manager);
 		imagePlatFour =  loadImage("imgPlatFormFour.png", manager);
+		imageCharacter = loadImage("character.png", manager);
 	}
 	
 	private static Bitmap loadImage(String path, AssetManager manager) {
