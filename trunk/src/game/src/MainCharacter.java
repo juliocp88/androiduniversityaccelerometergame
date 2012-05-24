@@ -3,14 +3,17 @@ package game.src;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.hardware.SensorManager;
 
 public class MainCharacter extends BaseCharacter
 {
 	private final Paint p;
 	private final PointF accelerometerValues;
-	private double vectorY = 0;
+	double vectorY = 0;
 	private double touchSpeed = 0;
+	private float score = 0;
+	private boolean dead = false;
 
 	public MainCharacter(double X, double Y)
 	{
@@ -19,6 +22,16 @@ public class MainCharacter extends BaseCharacter
 		accelerometerValues = new PointF(0, 0);
 		p = new Paint();
 		p.setAntiAlias(true);
+	}
+
+	public void setScore(float _score)
+	{
+		score = _score;
+	}
+
+	public boolean isDead()
+	{
+		return dead;
 	}
 
 	@Override
@@ -31,34 +44,47 @@ public class MainCharacter extends BaseCharacter
 	public void update(long difftime)
 	{
 		double difftimePsecond = (difftime / 1000.0f);
-		double oldX = X, oldY = Y;
+		double oldY = Y;
 		vectorY -= SensorManager.GRAVITY_EARTH;
 		if (accelerometerValues.x == 0)
 		{
 			X += (touchSpeed * 100) * difftimePsecond;
 		} else
 		{
-			X += (accelerometerValues.x * 100) * difftimePsecond;
+			X += (accelerometerValues.x * 200) * difftimePsecond;
 		}
 		Y -= vectorY * difftimePsecond;
 		if (handleOutOfScreen(X, Y))
 		{
-			X = oldX;
 			Y = oldY;
 		}
 	}
 
-	private boolean handleOutOfScreen(double X, double Y)
+	private boolean handleOutOfScreen(double _X, double _Y)
 	{
-		boolean leftCollision = X < 0;
-		boolean rightCollision = X + getSize().x > Properties.getScreenArea().right;
-		boolean topCollision = Y < 0;
-		boolean bottomCollision = Y + getSize().y > Properties.getScreenArea().bottom;
+		boolean leftCollision = _X + getSize().x < 0;
+		boolean rightCollision = _X > Properties.getScreenArea().right;
+		boolean topCollision = _Y < 0;
+		boolean bottomCollision = _Y + getSize().y > Properties.getScreenArea().bottom;
 		if (bottomCollision)
 		{
-			jump();
+			if (score == 0)
+			{
+				jump();
+			} else
+			{
+				dead = true;
+				return false;
+			}
 		}
-		return leftCollision || rightCollision || bottomCollision || topCollision;
+		if (leftCollision)
+		{
+			X = Properties.getScreenArea().right;
+		} else if (rightCollision)
+		{
+			X = -getSize().x;
+		}
+		return bottomCollision || topCollision;
 	}
 
 	public void updateAccelerometerValues(float tiltX, float tiltY)
@@ -69,17 +95,34 @@ public class MainCharacter extends BaseCharacter
 
 	public void jump()
 	{
-		vectorY = 500;
-	}
-
-	public boolean collidedWithRectangle(float left, float top, float right, float bottom)
-	{
-		return X >= left && X <= right && Y >= top && Y <= bottom;
+		vectorY = 400;
 	}
 
 	public void updateTouchSpeed(float speed)
 	{
 		touchSpeed = speed;
+	}
+
+	public boolean handleCollisionWithPlatform(Platform platform)
+	{
+		if (vectorY < 0)
+		{
+			RectF platformRect = new RectF(platform.x, platform.y, platform.x + platform.sizeX, platform.y + platform.sizeY * .25f);
+			RectF characterRect = new RectF((float) X, (float) Y + getSize().y * .75f, (float) X + getSize().x, (float) Y + getSize().y);
+			if (platformRect.intersect(characterRect))
+			{
+				if (platform.characterJumped(this))
+				{
+					jump();
+				}
+			}
+		}
+		return false;
+	}
+
+	public float getScore()
+	{
+		return score;
 	}
 
 }
