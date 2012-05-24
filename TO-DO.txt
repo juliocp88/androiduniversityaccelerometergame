@@ -1,11 +1,12 @@
 Sprite *Matheus*
 Personagem Principal *Matheus*
-Física & Colisão com os blocos *Leonardo*
+Física & Colisão com os blocos *Leonardo* OK!
 Mapa procedural (é criado conforme a movimentação do jogador) * Chacal *
-Input (movimentação por touch) *Leonardo*
-Movimentação por Acelerometro *Leonardo*
+Input (movimentação por touch) *Leonardo* OK!
+Movimentação por Acelerometro *Leonardo* OK!
 Pontuação por altura
-Inimigos *Matheus*	
+Inimigos *Matheus*
+PowerUps *Leonardo* 	
 
 if(Chacal == foda){
   Plataformas: 
