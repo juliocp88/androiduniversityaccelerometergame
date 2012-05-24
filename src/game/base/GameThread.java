@@ -11,68 +11,86 @@ import android.hardware.SensorEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class GameThread extends DrawablePanel {
-	
-	private AndroidAccelerometerGameActivity activityReference;
+public class GameThread extends DrawablePanel
+{
+
+	private final AndroidAccelerometerGameActivity activityReference;
 	private BaseCanvas lastCanvas;
 	private BaseCanvas currentCanvas;
-	private Paint clearCanvas;
-	private RectF screenRect;
-	public GameThread(AndroidAccelerometerGameActivity context) {
+	private final Paint clearCanvas;
+	private final RectF screenRect;
+
+	public GameThread(AndroidAccelerometerGameActivity context)
+	{
 		super(context);
 		activityReference = context;
 		activityReference.setSensorListener(this);
 		clearCanvas = new Paint();
 		clearCanvas.setColor(Color.BLACK);
-		screenRect = new RectF(0, 0, Properties.getScreenSize().x, Properties.getScreenSize().y);
+		screenRect = new RectF(0, 0, Properties.getScreenSize().x + 20, Properties.getScreenSize().y + 20);
 	}
-	
-	public AndroidAccelerometerGameActivity getBaseActivity() {
+
+	public AndroidAccelerometerGameActivity getBaseActivity()
+	{
 		return activityReference;
 	}
 
-	public void changeScreen(BaseCanvas newScreen) {
+	public void changeScreen(BaseCanvas newScreen)
+	{
 		lastCanvas = currentCanvas;
 		currentCanvas = newScreen;
 	}
-	
-	public void reloadLastScreen() {
+
+	public void reloadLastScreen()
+	{
 		changeScreen(lastCanvas);
 	}
 
-	public void onInitialize() {
+	public void onInitialize()
+	{
 	}
-	
-	public void onDraw(Canvas canvas) {
+
+	@Override
+	public void onDraw(Canvas canvas)
+	{
 		clearScreen(canvas);
 		currentCanvas.onDraw(canvas);
 	}
-	
-	private void clearScreen(Canvas canvas) {
+
+	private void clearScreen(Canvas canvas)
+	{
 		canvas.drawRect(screenRect, clearCanvas);
 	}
 
-	public void onUpdate(long difftime) {
+	public void onUpdate(long difftime)
+	{
 		currentCanvas.onUpdate(difftime);
 	}
-	
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+	public void onAccuracyChanged(Sensor sensor, int accuracy)
+	{
 		currentCanvas.onAccuracyChanged(sensor, accuracy);
 	}
-	
-	public void onSensorChanged(SensorEvent event) {
+
+	@Override
+	public void onSensorChanged(SensorEvent event)
+	{
 		currentCanvas.onSensorChanged(event);
 	}
 
-	public boolean onTouch(View v, MotionEvent event) {
+	public boolean onTouch(View v, MotionEvent event)
+	{
 		return currentCanvas.onTouch(v, event);
 	}
-	
-	public boolean onTouchEvent(MotionEvent event) {
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
 		return currentCanvas.onTouchEvent(event);
 	}
 
-	public int getFPS() {
+	public int getFPS()
+	{
 		return getThread().getFPS();
 	}
 

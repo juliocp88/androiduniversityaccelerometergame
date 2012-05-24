@@ -1,91 +1,117 @@
 package game.src;
 
 import game.base.ImagePlus;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.hardware.SensorManager;
 
-public class Platform {
-	
-	int x,y;
-	int sizeX,sizeY;
+public class Platform
+{
+
+	float x , y;
+	int sizeX , sizeY;
 	public ImagePlus imgPlatform;
 	boolean alive;
-	int broken =0;
+	int broken = 0;
 	Paint paint;
-	int typePlatForm;
-	boolean change=false;
-	
-	int testeTime =0;
-	
-	// type 0 = plataforma normal // type 1 = platadorma que some // type 2 = plataforma quebravel //type 3 = platadorma movel // 
-	
-	public Platform(int x_,int y_, int typePlatForm_){
-		creat(typePlatForm_);
-		x=x_;
-		y=y_;
+	platformTypes typePlatForm;
+	boolean change = false;
+	int testeTime = 0;
+	private final float speed = 50;
+
+	enum platformTypes
+	{
+		Normal, OneJump, Breakable, Movable
+	}
+
+	private double vectorY = 0;
+
+	public Platform(int x_, int y_, platformTypes typePlatForm_)
+	{
+		create(typePlatForm_);
+		x = x_;
+		y = y_;
 		sizeX = imgPlatform.getWidth();
 		sizeY = imgPlatform.getHeight();
-		alive=true;
+		alive = true;
 		typePlatForm = typePlatForm_;
 
 	}
-	
-	public void onUpdate(long difftime){
-		
-		if(y>=Properties.getScreenSize().y){
-			alive=false;
-		}
 
-		if(typePlatForm==2){
-			
-			if(broken==1){
-				imgPlatform = Images.imagePlatThreeBroken;
-				broken=2;
-			}else if(broken==2){
-				y+=50*difftime/1000;
+	public void onUpdate(long difftime)
+	{
+		double difftimePsecond = (difftime / 1000.0f);
+		if (y >= Properties.getScreenSize().y)
+		{
+			alive = false;
+		}
+		if (typePlatForm == platformTypes.Breakable)
+		{
+			if (broken == 2)
+			{
+				vectorY -= SensorManager.GRAVITY_EARTH;
+				y -= vectorY * difftimePsecond;
 			}
-		}else if(typePlatForm==3){
-			
-			if(change){
-				x-=20*difftime/1000;
-			}else{
-				x+=20*difftime/1000;
+		} else if (typePlatForm == platformTypes.Movable)
+		{
+			if (change)
+			{
+				x -= speed * difftimePsecond;
+			} else
+			{
+				x += speed * difftimePsecond;
 			}
-			if((x+sizeX+5)>Properties.getScreenSize().x){
-				change=true;
+			if ((x + sizeX + 5) > Properties.getScreenSize().x)
+			{
+				change = true;
 			}
-			if(x<=5){
-				change=false;
+			if (x <= 5)
+			{
+				change = false;
 			}
 		}
 	}
-	
-	public void Draw(Canvas canvas,Paint paint){
-		
-		 canvas.drawBitmap(imgPlatform.getImage(), x, y, paint);
+
+	public void Draw(Canvas canvas, Paint paint)
+	{
+		canvas.drawBitmap(imgPlatform.getImage(), x, y, paint);
 	}
-	
-	public void creat(int index){
-		switch (index) {
-		case 0:
+
+	public void create(platformTypes typePlatForm_)
+	{
+		switch (typePlatForm_)
+		{
+		case Normal:
 			imgPlatform = Images.imagePlatOne;
-		break;
-		case 1:
+			break;
+		case OneJump:
 			imgPlatform = Images.imagePlatTwo;
-		break;
-		case 2:
+			break;
+		case Breakable:
 			imgPlatform = Images.imagePlatThree;
-		break;
-		case 3:
+			break;
+		case Movable:
 			imgPlatform = Images.imagePlatFour;
-		break;
+			break;
 		default:
 			break;
 		}
-		
+
 	}
-	
-	
+
+	public boolean characterJumped(MainCharacter character)
+	{
+		if (typePlatForm == platformTypes.Breakable)
+		{
+			vectorY = character.vectorY;
+			broken = 2;
+			imgPlatform = Images.imagePlatThreeBroken;
+			return false;
+		} else if (typePlatForm == platformTypes.OneJump)
+		{
+			alive = false;
+		}
+		return true;
+	}
 
 }
